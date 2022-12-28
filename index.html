@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./imgs/favicon.ico">
+
+    <!-- Font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Import file css -->
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/responsive.css">
+
+    <title>Dartboard - Odoo</title>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-content-iconnavbar">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <div class="header-content-title">
+                <p>Dashboard</p>
+                <p>Tax Finalization </p>
+                <p>Calendar </p>
+                <p>Working Timesheet</p>
+                <p>Appraisals</p>
+                <p>Project</p>
+                <p>Timesheets </p>
+                <p class="activeTitle">Employees </p>
+                <p>Assets </p>
+                <p>Helpdesk</p>
+                <p>More <i class="fa-sharp fa-solid fa-caret-down"></i></p>
+            </div>
+            <div class="header-content-info">
+                <p><i class="fa-sharp fa-solid fa-clock"></i></p>
+                <p><i class="fa-solid fa-comments"></i></p>
+                <p class="header-content-info-avatar">
+                    <img src="./imgs/company_logo.png" alt="Avatar">
+                    <span>Nguyen Danh Tung</span>
+                </p>
+            </div>
+        </div>
+        <div class="header-main">
+            <div class="header-logo">
+                <img src="./imgs/company_logo.png" alt="logo" />
+            </div>
+            <div class="header-option">
+                <div class="header-option-add">Them nhan vien</div>
+                <div class="header-option-search">
+                    <input type="text" placeholder="Search ...">
+                    <div class="header-option-searchicon"><i class="fa-solid fa-magnifying-glass"></i></div>
+                </div>
+                <div class="header-option-other">
+                    <div class="header-option-page">
+                        <div class="header-option-page-info"><span></span> / <span></span></div>
+                        <div class="header-option-page-icon prev"><i class="fa-solid fa-chevron-left"></i></div>
+                        <div class="header-option-page-icon next"><i class="fa-solid fa-chevron-right"></i></div>
+                    </div>
+                    <div class="header-option-sort">
+                        <p>A-Z:</p>
+                        <span class="header-option-sort-icon down"><i
+                                class="fa-sharp fa-solid fa-chevron-down"></i></span>
+                        <p>Z-A:</p>
+                        <span class="header-option-sort-icon up"><i class="fa-sharp fa-solid fa-chevron-up"></i></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sideBar">
+            <div class="sideBar-main">
+                <div class="sideBar-title">Employees</div>
+                <p class="sideBar-detail active">Employees</p>
+                <p class="sideBar-detail">Adjust Employees</p>
+                <p class="sideBar-detail">Members Birthday</p>
+            </div>
+            <div class="sideBar-title">Departments</div>
+            <div class="sideBar-title">Termination Request</div>
+        </div>
+
+
+        <!-- Content -->
+        <div class="content">
+            <div class="content-staff">
+                <!-- <div class="content-staff-row">
+                    <div class="content-staff-block">
+                        <div class="content-staff-img">
+                            <img src="./imgs/avatar1.png" alt="">
+                            <p class="content-staff-img-detail">
+                                <i class="fa-solid fa-comments"></i>
+                                <span>15</span>
+                                <i class="fa-solid fa-users"></i>
+                                <span>3</span>
+                            </p>
+                        </div>
+                        <div class="content-staff-info">
+                            <p class="content-staff-name">Andrew Cheuk Hin Chan</p>
+                            <li class="content-staff-position">Consultant</li>
+                            <div class="content-staff-email">
+                                <i class="fa-solid fa-envelope"></i>
+                                <p>andrew.ch.chan@ntq-solution.com.vn</p>
+                            </div>
+                            <button class="content-staff-btn">Follow</button>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+
+        <!-- Modal them nhan vien -->
+        <div class="modal-block hide">
+            <div class="modal-add-staff">
+                <p class="modal-add-staff-title">Tao moi nhan vien</p>
+                <div class="modal-add-staff-input">
+                    <label>Ho va ten:</label>
+                    <input type="text">
+                </div>
+                <div class="modal-add-staff-email">
+                    <label>Email:</label>
+                    <input type="text" disabled>
+                </div>
+                <div class="modal-add-staff-select">
+                    <label>Chuc vu:</label>
+                    <select>
+                        <option value="Team Leader">Team Leader</option>
+                        <option value="Intern">Intern</option>
+                        <option value="Tester">Tester</option>
+                        <option value="Developer">Developer</option>
+                        <option value="BA">BA</option>
+                        <option value="Engineer">Engineer</option>
+                        <option value="Admin">Admin</option>
+                        <option value="BPO">BPO</option>
+                        <option value="Product Manager">Product Manager</option>
+                    </select>
+                </div>
+                <div class="modal-add-staff-submit">
+                    <button>Them</button>
+                </div>
+                <div class="modal-add-staff-close"><i class="fa-solid fa-xmark"></i></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script type="module" src="./js/main.js"></script>
+
+</html>
