@@ -87,4 +87,8 @@
     font-size: 1.2rem;
     margin-left: 2px;
   }
+
+  .header-sort-list {
+    top: 24px;
+  }
 }

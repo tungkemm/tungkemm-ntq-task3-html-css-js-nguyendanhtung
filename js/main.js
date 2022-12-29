@@ -303,8 +303,7 @@ const app = {
         // select id nhan vien cuoi cung
         const arrId = [];
         listEmployee.forEach((employee) => arrId.push(employee.id));
-        const sortArrId = arrId.sort();
-        const id = sortArrId[sortArrId.length - 1];
+        const id = arrId.sort()[arrId.sort().length - 1];
 
         // input email
         const inputEmail = app.inputEmailWhenAdd(inputNameAdd);
