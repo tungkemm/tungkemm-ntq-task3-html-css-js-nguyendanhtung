@@ -139,8 +139,8 @@ const app = {
     let inputEmailNew;
     const arrEmailNameAdd = convertName(input.slice()).toLowerCase().split(" ");
     if (arrEmailNameAdd.length === 1) {
-      arrEmailNameAdd.join("");
-      inputEmailNew = `${arrEmailNameAdd}@ntq-solution.com.vn`;
+      inputEmail = arrEmailNameAdd.join("");
+      inputEmailNew = `${inputEmail}@ntq-solution.com.vn`;
     } else {
       const firstEmailName = arrEmailNameAdd[0];
       const lastEmailName = arrEmailNameAdd[arrEmailNameAdd.length - 1];
@@ -157,11 +157,11 @@ const app = {
       const g = !isEmail && employee.email.replace(/[0-9]/g, "");
       return g === inputEmailNew;
     });
-
+    
     // update lai email input
     inputEmail = filterCoincidentEmail.length
-      ? `${inputEmail}${filterCoincidentEmail.length}@ntq-solution.com.vn`
-      : inputEmailNew;
+    ? `${inputEmail}${filterCoincidentEmail.length}@ntq-solution.com.vn`
+    : inputEmailNew;
 
     return inputEmail;
   },
