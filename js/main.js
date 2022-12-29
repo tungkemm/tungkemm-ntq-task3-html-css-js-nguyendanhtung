@@ -11,16 +11,17 @@ const prevPageEl = $(".header-option-page-icon.prev");
 const nextPageEl = $(".header-option-page-icon.next");
 const inputSearchEl = $(".header-option-search input");
 const btnSearchEl = $(".header-option-searchicon");
-const sortPageAZEl = $(".header-option-sort-icon.down");
-const sortPageZAEl = $(".header-option-sort-icon.up");
+const sortPageIdEl = $(".header-sort-item-id");
+const sortPageAZEl = $(".header-sort-item1");
+const sortPageZAEl = $(".header-sort-item2");
 const btnOpenModalAdd = $(".header-option-add");
 const modalAddEl = $(".modal-block");
+const modalFormEl = $(".modal-add-staff");
 const closeModalAddEl = $(".modal-add-staff-close");
 const inputNameAddEl = $(".modal-add-staff-input input");
 const selectPositionAddEl = $(".modal-add-staff-select select");
-// const inputEmailAddEl = $(".modal-add-staff-email input")
+const inputEmailAddEl = $(".modal-add-staff-email input");
 const btnAddEl = $(".modal-add-staff-submit button");
-console.log(btnAddEl);
 
 ///////// khai bao phan trang
 const listEmployee = EMPLOYEES;
@@ -74,36 +75,34 @@ const app = {
     totalPageEl.innerHTML = totalPage;
   },
 
-  // update perEmployees
-  updatePerEmployees: function (listdata) {
-    return listdata.slice(
-      (currentPage - 1) * perPage,
-      (currentPage - 1) * perPage + perPage
-    );
-  },
-
   // ham sort A-Z
   sortListDataAZ: function (listdata) {
     return listdata.sort((a, b) =>
       a.name
+        .toLowerCase()
         .split(" ")
         [a.name.split(" ").length - 1].localeCompare(
-          b.name.split(" ")[b.name.split(" ").length - 1]
+          b.name.toLowerCase().split(" ")[b.name.split(" ").length - 1]
         )
     );
   },
 
   // ham sort Z-A
   sortListDataZA: function (listdata) {
-    return listdata
-      .sort((a, b) =>
-        a.name
-          .split(" ")
-          [a.name.split(" ").length - 1].localeCompare(
-            b.name.split(" ")[b.name.split(" ").length - 1]
-          )
-      )
-      .reverse();
+    return this.sortListDataAZ(listdata).reverse();
+  },
+
+  // ham sort id
+  sortListDataId: function (listdata) {
+    return listdata.sort((a, b) => a.id - b.id);
+  },
+
+  // update perEmployees
+  updatePerEmployees: function (listdata) {
+    return listdata.slice(
+      (currentPage - 1) * perPage,
+      (currentPage - 1) * perPage + perPage
+    );
   },
 
   // ham update currentPage, perEmployees when next
@@ -118,11 +117,53 @@ const app = {
     perEmployees = this.updatePerEmployees(listdata);
   },
 
-  // ham update currentPage, perEmployees, totalPage when search or sort
+  // ham update currentPage, perEmployees, totalPage when search or sort or add
   updatePageWhenSearchOrSortOrAdd: function (listdata) {
     currentPage = 1;
     perEmployees = this.updatePerEmployees(listdata);
     totalPage = Math.ceil(listdata.length / perPage);
+  },
+
+  // ham get input email tu value input name
+  inputEmailWhenAdd: function (input) {
+    // ham convert loai bo dau trong 1 chuoi
+    const convertName = (name) => {
+      name = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      name = name.replace(/Đ/g, "D");
+      name = name.replace(/đ/g, "d");
+      return name;
+    };
+
+    // input name -> input email
+    let inputEmail;
+    let inputEmailNew;
+    const arrEmailNameAdd = convertName(input.slice()).toLowerCase().split(" ");
+    if (arrEmailNameAdd.length === 1) {
+      arrEmailNameAdd.join("");
+      inputEmailNew = `${arrEmailNameAdd}@ntq-solution.com.vn`;
+    } else {
+      const firstEmailName = arrEmailNameAdd[0];
+      const lastEmailName = arrEmailNameAdd[arrEmailNameAdd.length - 1];
+      const arrNewEmail = [];
+      arrNewEmail.push(firstEmailName);
+      arrNewEmail.push(lastEmailName);
+      inputEmail = arrNewEmail.reverse().join(".");
+      inputEmailNew = `${inputEmail}@ntq-solution.com.vn`;
+    }
+
+    // filter ra arr gom nhung email trung voi email input
+    const filterCoincidentEmail = listEmployee.filter((employee) => {
+      const isEmail = typeof employee.email === "boolean";
+      const g = !isEmail && employee.email.replace(/[0-9]/g, "");
+      return g === inputEmailNew;
+    });
+
+    // update lai email input
+    inputEmail = filterCoincidentEmail.length
+      ? `${inputEmail}${filterCoincidentEmail.length}@ntq-solution.com.vn`
+      : inputEmailNew;
+
+    return inputEmail;
   },
 
   handleEvents: function () {
@@ -178,6 +219,7 @@ const app = {
         });
 
         app.updatePageWhenSearchOrSortOrAdd(filterListEmployee);
+        filterListEmployee.length === 0 && alert("Khong co nhan vien nao !!!");
       } else {
         app.updatePageWhenSearchOrSortOrAdd(listEmployee);
       }
@@ -208,31 +250,55 @@ const app = {
       app.render();
     };
 
+    /////// xu ly khi sort Id
+    sortPageIdEl.onclick = function () {
+      if (inputValueSearch) {
+        app.sortListDataId(filterListEmployee);
+        app.updatePageWhenSearchOrSortOrAdd(filterListEmployee);
+      } else {
+        app.sortListDataId(listEmployee);
+        app.updatePageWhenSearchOrSortOrAdd(listEmployee);
+      }
+      app.render();
+    };
+
     /////// xu ly khi active modal add
     btnOpenModalAdd.onclick = function () {
       modalAddEl.classList.remove("hide");
       modalAddEl.classList.add("active");
     };
 
-    ///// xu ly khi hide modal add
-    closeModalAddEl.onclick = function () {
+    ///// xu ly khi hide modal add bang icon
+    closeModalAddEl.onclick = function (e) {
+      e.stopImmediatePropagation();
       modalAddEl.classList.remove("active");
       modalAddEl.classList.add("hide");
     };
 
+    ///// xu ly hide modal add khi click vao background
+    modalAddEl.onclick = function () {
+      modalAddEl.classList.remove("active");
+      modalAddEl.classList.add("hide");
+    };
+
+    ///// xu ly ngan noi bot khi click vao background modal
+    modalFormEl.onclick = (e) => {
+      e.stopPropagation();
+    };
+
+    ///// xu ly khi blur input name
+    inputNameAddEl.onblur = function () {
+      const inputNameAdd = inputNameAddEl.value.trim();
+      if (inputNameAdd) {
+        const inputEmail = app.inputEmailWhenAdd(inputNameAdd);
+        inputEmailAddEl.value = inputEmail;
+      }
+    };
+
     ///// xu ly khi add nhan vien
     btnAddEl.onclick = function () {
-      const convertName = (name) => {
-        name = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        name = name.replace(/Đ/g, "D");
-        name = name.replace(/đ/g, "d");
-
-        return name;
-      };
-
       const inputNameAdd = inputNameAddEl.value.trim();
       const selectPositionAdd = selectPositionAddEl.value.trim();
-
       if (inputNameAdd && selectPositionAdd) {
         // select id nhan vien cuoi cung
         const arrId = [];
@@ -240,34 +306,8 @@ const app = {
         const sortArrId = arrId.sort();
         const id = sortArrId[sortArrId.length - 1];
 
-        // clone input name va convert loai bo dau
-        let newInputNameAdd = inputNameAdd.slice();
-        newInputNameAdd = convertName(newInputNameAdd);
-
-        // xu ly get input email tu input name
-        const arrEmailNameAdd = newInputNameAdd.toLowerCase().split(" ");
-        const firstEmailName = arrEmailNameAdd[0];
-        const lastEmailName = arrEmailNameAdd[arrEmailNameAdd.length - 1];
-        // if(arrEmailNameAdd.length=1) {
-          // xu ly chi nhap 1 ten
-        // }
-        const arrNewEmail = [];
-        arrNewEmail.push(firstEmailName);
-        arrNewEmail.push(lastEmailName);
-        let inputEmail = arrNewEmail.reverse().join(".");
-        const inputEmailNew = `${inputEmail}@ntq-solution.com.vn`;
-
-        // filter mang ban dau ra mang moi gom nhung email giong voi email input
-        const filterCoincidentEmail = listEmployee.filter((employee) => {
-          const isEmail = typeof employee.email === "boolean";
-          const g = !isEmail && employee.email.replace(/[0-9]/g, "");
-          return g === inputEmailNew;
-        });
-
-        // update lai email input
-        inputEmail = filterCoincidentEmail.length
-          ? `${inputEmail}${filterCoincidentEmail.length}@ntq-solution.com.vn`
-          : inputEmailNew;
+        // input email
+        const inputEmail = app.inputEmailWhenAdd(inputNameAdd);
 
         // add nhan vien
         listEmployee.unshift({
@@ -278,6 +318,8 @@ const app = {
         });
 
         inputNameAddEl.value = "";
+        selectPositionAddEl.value = "Team Leader";
+        inputEmailAddEl.value = "";
         modalAddEl.classList.remove("active");
         modalAddEl.classList.add("hide");
 
