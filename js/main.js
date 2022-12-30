@@ -3,7 +3,7 @@ import { EMPLOYEES } from "./MOCK_DATA.js";
 //////// get element
 const $ = document.querySelector.bind(document);
 const employeeListEl = $(".content-staff");
-const logoPageEl = $(".header-logo")
+const logoPageEl = $(".header-logo");
 const currentPageEl = $(".header-option-page-info span:nth-child(1)");
 const totalPageEl = $(".header-option-page-info span:nth-child(2)");
 const prevPageEl = $(".header-option-page-icon.prev");
@@ -162,10 +162,27 @@ const app = {
       return g === inputEmailNew;
     });
 
+    // arr gom nhung so trong list email trung ten
+    const sliceNumberCoincidentEmail = filterCoincidentEmail.map((item) => {
+      const f = typeof item.email === "boolean";
+      if (!f) {
+        return item.email.replace(/[^0-9]/g, "");
+      }
+    });
+
     // update lai email input
-    inputEmail = filterCoincidentEmail.length
-      ? `${inputEmail}${filterCoincidentEmail.length}@ntq-solution.com.vn`
-      : inputEmailNew;
+    if (filterCoincidentEmail.length) {
+      let numberEmail;
+      const arrNumberEmail = sliceNumberCoincidentEmail.sort((a, b) => a.localeCompare(b));
+      if (arrNumberEmail[arrNumberEmail.length - 1] !== "") {
+        numberEmail = Number(arrNumberEmail[arrNumberEmail.length - 1]) + 1;
+      } else {
+        numberEmail = 1;
+      }
+      inputEmail = `${inputEmail}${numberEmail}@ntq-solution.com.vn`;
+    } else {
+      inputEmail = inputEmailNew;
+    }
 
     return inputEmail;
   },
@@ -228,7 +245,7 @@ const app = {
           app.render();
         }
       } else {
-        alert("Chua nhap gi trong input search")
+        alert("Chua nhap gi trong input search");
       }
     };
 
@@ -339,8 +356,8 @@ const app = {
         inputNameAddEl.value = "";
         selectPositionAddEl.value = "Team Leader";
         inputEmailAddEl.value = "";
-        inputValueSearch = ""
-        inputSearchEl.value = ""
+        inputValueSearch = "";
+        inputSearchEl.value = "";
         modalAddEl.classList.remove("active");
         modalAddEl.classList.add("hide");
 
