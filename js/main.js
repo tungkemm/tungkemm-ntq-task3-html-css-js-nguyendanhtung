@@ -2,8 +2,6 @@ import { EMPLOYEES } from "./MOCK_DATA.js";
 
 //////// get element
 const $ = document.querySelector.bind(document);
-const $$ = document.querySelectorAll.bind(document);
-
 const employeeListEl = $(".content-staff");
 const currentPageEl = $(".header-option-page-info span:nth-child(1)");
 const totalPageEl = $(".header-option-page-info span:nth-child(2)");
@@ -40,8 +38,12 @@ let filterListEmployee = [];
 const app = {
   render: function () {
     const htmls = perEmployees.map((employee) => {
-      const arrFullname = employee.name.trim().split(" ");
+      // xu ly render avatar
+      const isName = typeof employee.name === "boolean";
+      const fullName = !isName && employee.name.replace(/[0-9]/g, "")
+      const arrFullname = fullName.trim().split(" ");
       const firstName = arrFullname[arrFullname.length - 1].split("")[0];
+
       return `
         <div class="content-staff-row">
             <div class="content-staff-block">
