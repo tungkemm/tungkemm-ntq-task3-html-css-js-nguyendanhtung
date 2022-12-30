@@ -3,11 +3,13 @@ import { EMPLOYEES } from "./MOCK_DATA.js";
 //////// get element
 const $ = document.querySelector.bind(document);
 const employeeListEl = $(".content-staff");
+const logoPageEl = $(".header-logo")
 const currentPageEl = $(".header-option-page-info span:nth-child(1)");
 const totalPageEl = $(".header-option-page-info span:nth-child(2)");
 const prevPageEl = $(".header-option-page-icon.prev");
 const nextPageEl = $(".header-option-page-icon.next");
 const inputSearchEl = $(".header-option-search input");
+const btnDeleteSearchEl = $(".header-option-deleteicon");
 const btnSearchEl = $(".header-option-searchicon");
 const sortPageIdEl = $(".header-sort-item-id");
 const sortPageAZEl = $(".header-sort-item1");
@@ -40,7 +42,7 @@ const app = {
     const htmls = perEmployees.map((employee) => {
       // xu ly render avatar
       const isName = typeof employee.name === "boolean";
-      const fullName = !isName && employee.name.replace(/[0-9]/g, "")
+      const fullName = !isName && employee.name.replace(/[0-9]/g, "");
       const arrFullname = fullName.trim().split(" ");
       const firstName = arrFullname[arrFullname.length - 1].split("")[0];
 
@@ -159,11 +161,11 @@ const app = {
       const g = !isEmail && employee.email.replace(/[0-9]/g, "");
       return g === inputEmailNew;
     });
-    
+
     // update lai email input
     inputEmail = filterCoincidentEmail.length
-    ? `${inputEmail}${filterCoincidentEmail.length}@ntq-solution.com.vn`
-    : inputEmailNew;
+      ? `${inputEmail}${filterCoincidentEmail.length}@ntq-solution.com.vn`
+      : inputEmailNew;
 
     return inputEmail;
   },
@@ -219,12 +221,28 @@ const app = {
             employee.job.toLowerCase().includes(inputValueSearch)
           );
         });
-
-        app.updatePageWhenSearchOrSortOrAdd(filterListEmployee);
-        filterListEmployee.length === 0 && alert("Khong co nhan vien nao !!!");
+        if (filterListEmployee.length === 0) {
+          alert("Khong tim thay thong tin nhan vien nao !!!");
+        } else {
+          app.updatePageWhenSearchOrSortOrAdd(filterListEmployee);
+          app.render();
+        }
       } else {
-        app.updatePageWhenSearchOrSortOrAdd(listEmployee);
+        alert("Chua nhap gi trong input search")
       }
+    };
+
+    ////// xu ly khi delete text search
+    btnDeleteSearchEl.onclick = function () {
+      inputValueSearch = "";
+      inputSearchEl.value = "";
+      app.updatePageWhenSearchOrSortOrAdd(listEmployee);
+      app.render();
+    };
+
+    logoPageEl.onclick = function () {
+      inputValueSearch = "";
+      app.updatePageWhenSearchOrSortOrAdd(listEmployee);
       app.render();
     };
 
@@ -321,6 +339,8 @@ const app = {
         inputNameAddEl.value = "";
         selectPositionAddEl.value = "Team Leader";
         inputEmailAddEl.value = "";
+        inputValueSearch = ""
+        inputSearchEl.value = ""
         modalAddEl.classList.remove("active");
         modalAddEl.classList.add("hide");
 

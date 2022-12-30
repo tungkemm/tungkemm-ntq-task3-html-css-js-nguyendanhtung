@@ -93,6 +93,7 @@ html {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .header-logo img {
@@ -123,6 +124,7 @@ html {
 }
 
 .header-option-search {
+  position: relative;
   display: flex;
   flex: 1;
   align-items: center;
@@ -139,6 +141,27 @@ html {
   font-size: 1.3rem;
   background-color: #f9f9f9;
   padding: 4px 20px 4px 10px;
+}
+
+.header-option-deleteicon {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 50px;
+  font-size: 1rem;
+  padding: 2px 8px;
+  background-color: rgb(160, 160, 160);
+  color: var(--text-color-white);
+  border-radius: 6px;
+}
+
+.header-option-deleteicon:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.header-option-deleteicon p {
+  margin-right: 4px;
 }
 
 .header-option-searchicon {
