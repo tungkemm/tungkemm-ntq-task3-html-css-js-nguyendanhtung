@@ -129,6 +129,7 @@ html {
   flex: 1;
   align-items: center;
   border: 1px solid var(--text-color-secondary);
+  border-right: 0px;
   border-radius: 6px;
   margin: 0 180px;
   overflow: hidden;
