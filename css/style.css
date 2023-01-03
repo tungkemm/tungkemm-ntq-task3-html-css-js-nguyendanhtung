@@ -310,6 +310,21 @@ html {
   background-color: var(--bg-color-primary);
 }
 
+.sideBar-info-sort {
+  width: 160px;
+  position: absolute;
+  left: -160px;
+  bottom: 160px;
+  font-size: 1.4rem;
+  font-weight: 400;
+  padding: 8px 16px;
+  color: var(--text-color-white);
+  background-color: var(--bg-color-primary);
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
+  transition: all ease-in 0.5s;
+}
+
 /* Content /////////////////// */
 .content {
   width: 84%;

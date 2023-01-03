@@ -22,6 +22,8 @@ const inputNameAddEl = $(".modal-add-staff-input input");
 const selectPositionAddEl = $(".modal-add-staff-select select");
 const inputEmailAddEl = $(".modal-add-staff-email input");
 const btnAddEl = $(".modal-add-staff-submit button");
+const notiSortEl = $(".sideBar-info-sort");
+const notiSortDetailEl = $(".sideBar-info-sort span");
 
 ///////// khai bao phan trang
 const listEmployee = EMPLOYEES;
@@ -38,6 +40,7 @@ let inputValueSearch = "";
 let filterListEmployee = [];
 
 const app = {
+  // ham render
   render: function () {
     const htmls = perEmployees.map((employee) => {
       // xu ly render avatar
@@ -101,7 +104,7 @@ const app = {
     return listdata.sort((a, b) => a.id - b.id);
   },
 
-  // update perEmployees
+  // ham update perEmployees
   updatePerEmployees: function (listdata) {
     return listdata.slice(
       (currentPage - 1) * perPage,
@@ -128,20 +131,22 @@ const app = {
     totalPage = Math.ceil(listdata.length / perPage);
   },
 
-  // ham get input email tu value input name
-  inputEmailWhenAdd: function (input) {
-    // ham convert loai bo dau trong 1 chuoi
-    const convertName = (name) => {
-      name = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      name = name.replace(/Đ/g, "D");
-      name = name.replace(/đ/g, "d");
-      return name;
-    };
+  // ham loai bo dau tieng viet trong 1 chuoi
+  convertName: (name) => {
+    name = name.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    name = name.replace(/Đ/g, "D");
+    name = name.replace(/đ/g, "d");
+    return name;
+  },
 
+  // ham get input email tu value input name (form add nhan vien)
+  inputEmailWhenAdd: function (input) {
     // input name -> input email
     let inputEmail;
     let inputEmailNew;
-    const arrEmailNameAdd = convertName(input.slice()).toLowerCase().split(" ");
+    const arrEmailNameAdd = this.convertName(input.slice())
+      .toLowerCase()
+      .split(" ");
     if (arrEmailNameAdd.length === 1) {
       inputEmail = arrEmailNameAdd.join("");
       inputEmailNew = `${inputEmail}@ntq-solution.com.vn`;
@@ -173,7 +178,9 @@ const app = {
     // update lai email input
     if (filterCoincidentEmail.length) {
       let numberEmail;
-      const arrNumberEmail = sliceNumberCoincidentEmail.sort((a, b) => a.localeCompare(b));
+      const arrNumberEmail = sliceNumberCoincidentEmail.sort((a, b) =>
+        a.localeCompare(b)
+      );
       if (arrNumberEmail[arrNumberEmail.length - 1] !== "") {
         numberEmail = Number(arrNumberEmail[arrNumberEmail.length - 1]) + 1;
       } else {
@@ -187,8 +194,18 @@ const app = {
     return inputEmail;
   },
 
+  // ham active hide noti sort
+  handleNotiSort: function (element, text) {
+    element.setAttribute("style", "left:0");
+    notiSortDetailEl.innerHTML = `${text}`;
+
+    setTimeout(() => {
+      element.setAttribute("style", "left:-160px");
+    }, 3000);
+  },
+
   handleEvents: function () {
-    //////// xu ly khi next page
+    ////// khi click btn next page
     nextPageEl.onclick = function () {
       if (inputValueSearch) {
         if (currentPage < totalPage) {
@@ -207,7 +224,7 @@ const app = {
       }
     };
 
-    /////// xu ly khi prev page
+    /////// khi clikc btn prev page
     prevPageEl.onclick = function () {
       if (inputValueSearch) {
         if (currentPage > 1) {
@@ -226,13 +243,19 @@ const app = {
       }
     };
 
-    /////// xu ly khi search
+    /////// khi click btn search
     btnSearchEl.onclick = function () {
-      inputValueSearch = inputSearchEl.value.trim().toLowerCase();
+      inputValueSearch = app
+        .convertName(inputSearchEl.value)
+        .trim()
+        .toLowerCase();
       if (inputValueSearch) {
         filterListEmployee = listEmployee.filter((employee) => {
           return (
-            employee.name.toLowerCase().includes(inputValueSearch) ||
+            app
+              .convertName(employee.name)
+              .toLowerCase()
+              .includes(inputValueSearch) ||
             (employee.email &&
               employee.email.toLowerCase().includes(inputValueSearch)) ||
             employee.job.toLowerCase().includes(inputValueSearch)
@@ -249,7 +272,7 @@ const app = {
       }
     };
 
-    ////// xu ly khi delete text search
+    ////// khi click btn delete text search
     btnDeleteSearchEl.onclick = function () {
       inputValueSearch = "";
       inputSearchEl.value = "";
@@ -257,13 +280,14 @@ const app = {
       app.render();
     };
 
+    ////// khi click vao logo NTQ
     logoPageEl.onclick = function () {
       inputValueSearch = "";
       app.updatePageWhenSearchOrSortOrAdd(listEmployee);
       app.render();
     };
 
-    /////// xu ly khi sort A-Z
+    /////// khi click sort A-Z
     sortPageAZEl.onclick = function () {
       if (inputValueSearch) {
         app.sortListDataAZ(filterListEmployee);
@@ -272,10 +296,11 @@ const app = {
         app.sortListDataAZ(listEmployee);
         app.updatePageWhenSearchOrSortOrAdd(listEmployee);
       }
+      app.handleNotiSort(notiSortEl, "A-Z");
       app.render();
     };
 
-    /////// xu ly khi sort Z-A
+    /////// khi click sort Z-A
     sortPageZAEl.onclick = function () {
       if (inputValueSearch) {
         app.sortListDataZA(filterListEmployee);
@@ -284,10 +309,11 @@ const app = {
         app.sortListDataZA(listEmployee);
         app.updatePageWhenSearchOrSortOrAdd(listEmployee);
       }
+      app.handleNotiSort(notiSortEl, "Z-A");
       app.render();
     };
 
-    /////// xu ly khi sort Id
+    /////// khi click sort Id
     sortPageIdEl.onclick = function () {
       if (inputValueSearch) {
         app.sortListDataId(filterListEmployee);
@@ -296,34 +322,35 @@ const app = {
         app.sortListDataId(listEmployee);
         app.updatePageWhenSearchOrSortOrAdd(listEmployee);
       }
+      app.handleNotiSort(notiSortEl, "Id");
       app.render();
     };
 
-    /////// xu ly khi active modal add
+    /////// khi active modal add
     btnOpenModalAdd.onclick = function () {
       modalAddEl.classList.remove("hide");
       modalAddEl.classList.add("active");
     };
 
-    ///// xu ly khi hide modal add bang icon
+    ///// khi hide modal add bang icon
     closeModalAddEl.onclick = function (e) {
       e.stopImmediatePropagation();
       modalAddEl.classList.remove("active");
       modalAddEl.classList.add("hide");
     };
 
-    ///// xu ly hide modal add khi click vao background
+    ///// hide modal add khi click vao background
     modalAddEl.onclick = function () {
       modalAddEl.classList.remove("active");
       modalAddEl.classList.add("hide");
     };
 
-    ///// xu ly ngan noi bot khi click vao background modal
+    ///// ngan noi bot khi click vao background modal
     modalFormEl.onclick = (e) => {
       e.stopPropagation();
     };
 
-    ///// xu ly khi blur input name
+    ///// khi blur input name (form add nhan vien)
     inputNameAddEl.onblur = function () {
       const inputNameAdd = inputNameAddEl.value.trim();
       if (inputNameAdd) {
@@ -332,40 +359,49 @@ const app = {
       }
     };
 
-    ///// xu ly khi add nhan vien
+    ///// khi click btn add nhan vien
     btnAddEl.onclick = function () {
       const inputNameAdd = inputNameAddEl.value.trim();
       const selectPositionAdd = selectPositionAddEl.value.trim();
       if (inputNameAdd && selectPositionAdd) {
-        // select id nhan vien cuoi cung
-        const arrId = [];
-        listEmployee.forEach((employee) => arrId.push(employee.id));
-        const id = arrId.sort()[arrId.sort().length - 1];
+        if ((inputNameAdd.replace(/[^0-9]/g, "").length === 0)) {
+          // select id nhan vien cuoi cung
+          const arrId = [];
+          listEmployee.forEach((employee) => arrId.push(employee.id));
+          const id = arrId.sort()[arrId.sort().length - 1];
 
-        // input email
-        const inputEmail = app.inputEmailWhenAdd(inputNameAdd);
+          // input email
+          const inputEmail = app.inputEmailWhenAdd(inputNameAdd);
 
-        // add nhan vien
-        listEmployee.unshift({
-          id: id + 1,
-          name: inputNameAdd,
-          email: inputEmail,
-          job: selectPositionAdd,
-        });
+          // add nhan vien
+          listEmployee.unshift({
+            id: id + 1,
+            name: inputNameAdd,
+            email: inputEmail,
+            job: selectPositionAdd,
+          });
 
-        inputNameAddEl.value = "";
-        selectPositionAddEl.value = "Team Leader";
-        inputEmailAddEl.value = "";
-        inputValueSearch = "";
-        inputSearchEl.value = "";
-        modalAddEl.classList.remove("active");
-        modalAddEl.classList.add("hide");
+          inputNameAddEl.value = "";
+          selectPositionAddEl.value = "Team Leader";
+          inputEmailAddEl.value = "";
+          inputValueSearch = "";
+          inputSearchEl.value = "";
+          modalAddEl.classList.remove("active");
+          modalAddEl.classList.add("hide");
 
-        app.updatePageWhenSearchOrSortOrAdd(listEmployee);
-        app.render();
+          app.updatePageWhenSearchOrSortOrAdd(listEmployee);
+          app.render();
+        } else {
+          alert("Ten nhan vien khong duoc nhap so");
+        }
       } else {
         alert("Chua nhap day du thong tin");
       }
+    };
+
+    ///// khi load trang
+    window.onload = function () {
+      app.handleNotiSort(notiSortEl, "Original Data");
     };
   },
 
