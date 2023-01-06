@@ -26,7 +26,7 @@
 /*  TABLET */
 @media (min-width: 740px) and (max-width: 1023px) {
   .header-option-search {
-    margin: 0 66px;
+    margin: 0 50px;
   }
 
   .content-staff-row {
@@ -37,10 +37,9 @@
 /* MOBILE */
 @media (max-width: 739px) {
   .header-option-add {
-    min-width: 18%;
     font-size: 1.1rem;
     margin-left: 4px;
-    padding: 4px 8px;
+    padding: 3px 8px;
   }
 
   .content-staff-row {
@@ -90,5 +89,19 @@
 
   .header-sort-list {
     top: 24px;
+  }
+
+  .header-option-record {
+    font-size: 1.1rem;
+    margin-right: 8px;
+  }
+
+  .header-option-record-list {
+    padding: 2px;
+  }
+
+  .header-option-record-list,
+  .header-option-record-list option {
+    font-size: 1.1rem;
   }
 }
