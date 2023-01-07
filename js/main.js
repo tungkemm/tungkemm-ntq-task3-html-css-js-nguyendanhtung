@@ -442,10 +442,11 @@ const app = {
       app.updateCssBtnWhenAddOrSortOrSearch(...cssBtnWhenAddOrSortOrSearch);
     };
 
-    /////// khi active modal add
+    ////// khi active modal add
     btnOpenModalAdd.onclick = function () {
       modalAddEl.classList.remove("hide");
       modalAddEl.classList.add("active");
+      inputNameAddEl.focus()
     };
 
     ////// khi hide modal add bang icon
@@ -467,7 +468,7 @@ const app = {
     };
 
     ///// khi change input name (form add nhan vien)
-    inputNameAddEl.onkeyup = function () {
+    inputNameAddEl.oninput = function () {
       const inputNameAdd = inputNameAddEl.value.trim();
       if (inputNameAdd) {
         const inputEmail = app.getInputEmail(inputNameAdd);
