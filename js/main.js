@@ -29,6 +29,8 @@ const notiSortDetailEl = $(".sideBar-info-sort span");
 
 const contentEmpty = document.createElement("div");
 
+// console.log()
+
 ///////// khai bao phan trang
 const listEmployee = EMPLOYEES;
 let perPage = 40; // so employee trong 1 page
@@ -274,7 +276,6 @@ const app = {
   // ham handle search nhan vien
   handleSearchEmployee: function (search) {
     inputValueSearch = this.convertName(search.value).trim().toLowerCase();
-    if (inputValueSearch) {
       filterListEmployee = listEmployee.filter((employee) => {
         return (
           this.convertName(employee.name)
@@ -303,17 +304,15 @@ const app = {
       this.updatePageWhenSearchOrSortOrAdd(filterListEmployee);
       this.render();
       this.updateCssBtnWhenAddOrSortOrSearch(...cssBtnWhenAddOrSortOrSearch);
-    } else {
-      alert("Chua nhap gi trong input search");
-    }
   },
 
   // ham handle add nhan vien
   handleAddEmployee: function (name, position) {
     const inputNameAdd = name.value.trim();
     const selectPositionAdd = position.value.trim();
+    const checkSpecial = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
     if (inputNameAdd && selectPositionAdd) {
-      if (inputNameAdd.replace(/[^0-9]/g, "").length === 0) {
+      if (inputNameAdd.replace(/[^0-9]/g, "").length === 0 &&  !checkSpecial.test(inputNameAdd)) {
         // select id nhan vien cuoi cung
         const arrId = [];
         listEmployee.forEach((employee) => arrId.push(employee.id));
@@ -343,10 +342,22 @@ const app = {
         this.updateCssBtnWhenAddOrSortOrSearch(...cssBtnWhenAddOrSortOrSearch);
         contentEmpty.remove();
       } else {
-        alert("Ten nhan vien khong duoc nhap so");
+        alert(
+          `${inputNameAddEl.previousElementSibling.innerHTML.slice(
+            0,
+            inputNameAddEl.previousElementSibling.innerHTML.length - 1
+          )} khong duoc nhap so va ky tu dac biet`
+        );
       }
     } else {
-      alert("Chua nhap day du thong tin");
+      alert(
+        `Chua nhap day du ${inputNameAddEl.previousElementSibling.innerHTML
+          .toLowerCase()
+          .slice(
+            0,
+            inputNameAddEl.previousElementSibling.innerHTML.length - 1
+          )}`
+      );
     }
   },
 
@@ -389,9 +400,16 @@ const app = {
     };
 
     ////// khi click btn search
-    btnSearchEl.onclick = function () {
+    btnSearchEl.onclick = function (e) {
       app.handleSearchEmployee(inputSearchEl);
     };
+
+    ///// khi keydown vao input search
+    inputSearchEl.onkeydown = function (e) {
+      if (e.keyCode === 13) {
+        app.handleSearchEmployee(inputSearchEl);
+      }
+    }
 
     ///// khi click btn delete text search
     btnDeleteSearchEl.onclick = function () {
@@ -446,7 +464,7 @@ const app = {
     btnOpenModalAdd.onclick = function () {
       modalAddEl.classList.remove("hide");
       modalAddEl.classList.add("active");
-      inputNameAddEl.focus()
+      inputNameAddEl.focus();
     };
 
     ////// khi hide modal add bang icon
@@ -479,6 +497,13 @@ const app = {
     ///// khi click btn add nhan vien
     btnAddEl.onclick = function () {
       app.handleAddEmployee(inputNameAddEl, selectPositionAddEl);
+    };
+
+    ///// khi keydown vao input name (form add nhan vien)
+    inputNameAddEl.onkeydown = function (e) {
+      if (e.keyCode === 13) {
+        app.handleAddEmployee(inputNameAddEl, selectPositionAddEl);
+      }
     };
   },
 };
